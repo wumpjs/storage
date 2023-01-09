@@ -1,6 +1,6 @@
 
 # Wump.js/Storage
-
+![example workflow](https://github.com/wumpjs/storage/actions/workflows/src/index.js/badge.svg)
 Storage module for wump.js
 
 
