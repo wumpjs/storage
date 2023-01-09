@@ -1,6 +1,6 @@
 
 # Wump.js/Storage
-![build](https://github.com/wumpjs/storage/actions/workflows/main.yml/badge.svg)
+![build](https://github.com/wumpjs/storage/actions/workflows/node.js.yml/badge.svg)
 
 Storage module for wump.js
 
