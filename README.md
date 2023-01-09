@@ -1,2 +1,2 @@
 # storage
-Storage module of wump.js
+Storage module for WumpJS.
