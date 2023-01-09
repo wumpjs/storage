@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Storage module for wump.js",
   "main": "src/index.js",
+  "type":"module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
