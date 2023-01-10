@@ -1,6 +1,6 @@
 # @wumpjs/storage
 [![CodeQL](https://github.com/wumpjs/storage/actions/workflows/codeql.yml/badge.svg)](https://github.com/wumpjs/storage/actions/workflows/codeql.yml)
-![node](https://github.com/wumpjs/storage/actions/workflows/node.js.yml/badge.svg)
+[![NodeJS CI](https://github.com/wumpjs/storage/actions/workflows/node.js.yml/badge.svg)](https://github.com/wumpjs/storage/actions/workflows/node.js.yml)
 ![npm](https://github.com/wumpjs/storage/actions/workflows/npm-github.yml/badge.svg)
 
 Storage module for wump.js
