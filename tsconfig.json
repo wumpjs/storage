@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noEmit": true,
+    "allowJs": true,
+    "esModuleInterop": true
+  },
+  "files": [
+    "./src/index.d.ts"
+  ]
+}

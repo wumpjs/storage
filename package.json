@@ -1,16 +1,23 @@
 {
   "name": "@wumpjs/storage",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "description": "Storage module for wump.js",
   "main": "src/index.js",
-  "type":"module",
+  "type": "module",
+  "types": "./src/index.d.ts",
   "scripts": {
-    "test": "node src/index.js"
+    "test": "node src/test/index"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "repository": {
     "url": "git://github.com/wumpjs/storage.git"
+  },
+  "dependencies": {
+    "@wumpjs/providers": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18"
   }
 }
