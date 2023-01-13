@@ -1,8 +1,6 @@
 import { Storage } from "../Storage";
-const db = new Storage<number>();
+const db = new Storage<any>();
 
-db.set();
+db.on("dataSaved", (key, value, data) => console.log(key, value, data));
+
 db.set("a", 0);
-db.clear();
-
-console.log(db.information().usedStorage);

@@ -1,6 +1,6 @@
 {
   "name": "@wumpjs/storage",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Storage module for wump.js",
   "main": "src/index.js",
   "type": "module",
@@ -15,7 +15,7 @@
     "url": "git://github.com/wumpjs/storage.git"
   },
   "dependencies": {
-    "@wumpjs/providers": "^1.0.1"
+    "@wumpjs/providers": "^1.0.2",
     "typed-emitter": "^2.1.0"
   },
   "devDependencies": {

@@ -2,23 +2,18 @@ import { Checker } from "@wumpjs/providers";
 
 import EventEmitter from "node:events";
 
-import { StorageEvents as Events } from "./Events.js";
+import { StorageEvents as Events } from "./enums/JSEvents.js";
 
 const percent = (a, b) => ((a / b) * 100).toFixed(2);
 
 export class Storage extends EventEmitter {
-  /**
-   * @constructor
-   * @param {number} size Storage size. 
-   * @default 128000
-   */
   constructor(size = 128000) {
     super();
 
     this.setMaxListeners(0);
 
     const sizeChecker = new Checker(size);
-    sizeChecker.createError(!sizeChecker.isNumber, "size", { expected: "Number" }).throw();
+    sizeChecker.createError(sizeChecker.isNotNumber, "size", { expected: "Number" }).throw();
 
     this.storageSize = Number(size).toFixed();
   };
@@ -27,23 +22,14 @@ export class Storage extends EventEmitter {
 
   #STORAGE = new Map();
 
-  /**
-   * Shows Total Size of Storage.
-   * @returns {number}
-   */
   size = 0;
 
-  /**
-   * Adds a new element with a specified key and value to the Map. If an element with the same key already exists, the element will be updated.
-   * @param {string} key 
-   * @param {any} value 
-   * @returns {any}
-   */
   set(key, value) {
     const keyChecker = new Checker(key);
-    keyChecker.createError(!keyChecker.isString, "key", { expected: "String" }).throw();
+    keyChecker.createError(keyChecker.isNotString, "key", { expected: "String" }).throw();
 
-    new Checker(this.size).createError(this.size > this.storageSize, "storage", { errorType: "Data Limit Exceeded", expected: this.size, received: this.storageSize }).throw();
+    const limited = new Checker(this.size)
+    limited.createError(this.size > this.storageSize, "storage", { errorType: "Data Limit Exceeded", expected: this.size, received: this.storageSize }).throw();
 
     this.#STORAGE.set(key, value);
 
@@ -56,14 +42,9 @@ export class Storage extends EventEmitter {
     return data;
   };
 
-  /**
-   * 
-   * @param {string} key 
-   * @returns {boolean} true if an element in the Map existed and has been removed, or false if the element does not exist.
-   */
   delete(key) {
     const keyChecker = new Checker(key);
-    keyChecker.createError(!keyChecker.isString, "key", { expected: "String" }).throw();
+    keyChecker.createError(keyChecker.isNotString, "key", { expected: "String" }).throw();
 
     const data = this.fetch(key);
     this.#STORAGE.delete(key);
@@ -75,14 +56,9 @@ export class Storage extends EventEmitter {
     return data;
   };
 
-  /**
-   * Returns a specified element from the Map object. If the value that is associated to the provided key is an object, then you will get a reference to that object and any change made to that object will effectively modify it inside the Map.
-   * @param {string} key
-   * @returns {any | undefined} Returns the element associated with the specified key. If no element is associated with the specified key, undefined is returned.
-   */
   fetch(key) {
     const keyChecker = new Checker(key);
-    keyChecker.createError(!keyChecker.isString, "key", { expected: "String" }).throw();
+    keyChecker.createError(keyChecker.isNotString, "key", { expected: "String" }).throw();
 
     const data = this.#STORAGE.get(key);
 
@@ -91,20 +67,11 @@ export class Storage extends EventEmitter {
     return data;
   };
 
-  /**
-   * Returns a specified element from the Map object. If the value that is associated to the provided key is an object, then you will get a reference to that object and any change made to that object will effectively modify it inside the Map.
-   * @param {string} key
-   * @returns {any | undefined} Returns the element associated with the specified key. If no element is associated with the specified key, undefined is returned.
-   */
   get = this.fetch;
 
-  /**
-   * @param {string} key 
-   * @returns {boolean} Boolean indicating whether an element with the specified key exists or not.
-   */
   exists(key) {
     const keyChecker = new Checker(key);
-    keyChecker.createError(!keyChecker.isString, "key", { expected: "String" }).throw();
+    keyChecker.createError(keyChecker.isNotString, "key", { expected: "String" }).throw();
 
     const has = this.#STORAGE.has(key);
 
@@ -116,22 +83,13 @@ export class Storage extends EventEmitter {
     return has;
   };
 
-  /**
-   * @param {string} key 
-   * @returns {boolean} Boolean indicating whether an element with the specified key exists or not.
-   */
   has = this.exists;
 
-  /**
-   * Calls a defined callback function on each element of an array, and returns an array that contains the results.
-   * @param {( value: any, key: string, index: number, this: Storage )} callback A function that accepts up to four arguments. The map method calls the callback function one time for each element in the array.
-   * @returns {void[]}
-   */
   map(callback) {
     const callbackChecker = new Checker(callback);
     callbackChecker.createError(!callbackChecker.isFunction, "callback", { expected: "Function" }).throw();
 
-    let index = 0;
+    let index = -1;
 
     const entries = this.entries();
 
@@ -140,18 +98,11 @@ export class Storage extends EventEmitter {
     return Array.from({ length: this.size }, () => {
       const [key, value] = entries.next().value;
 
-      callback(value, key, index, this);
-
       index++;
+      return callback(value, key, index, this);
     });
   };
 
-  /**
-   * Returns the value of the first element in the array where predicate is true, and undefined otherwise.
-   * @param {( value: any, key: string, this: Storage )} callback
-   * find calls predicate once for each element of the array, in ascending order, until it finds one where predicate returns true. If such an element is found, find immediately returns that element value. Otherwise, find returns undefined.
-   * @returns {boolean | undefined}
-   */
   find(callback) {
     const callbackChecker = new Checker(callback);
     callbackChecker.createError(!callbackChecker.isFunction, "callback", { expected: "Function" }).throw();
@@ -160,13 +111,11 @@ export class Storage extends EventEmitter {
       if (callback(value, key, this)) return true;
     };
 
+    this.emit(Events.DataSearched, callback);
+
     return void 0;
   };
 
-  /**
-   * Reverses the elements in an array in place. This method mutates the array and returns a reference to the same array.
-   * @returns {this}
-   */
   reverse() {
     const entries = [...this.entries()].reverse();
 
@@ -178,13 +127,11 @@ export class Storage extends EventEmitter {
       this.size++;
     };
 
+    this.emit(Events.DataReversed, entries);
+
     return this;
   };
 
-  /**
-   * Clears storage.
-   * @returns {string[]}
-   */
   clear() {
     this.size = 0;
 
@@ -192,13 +139,11 @@ export class Storage extends EventEmitter {
 
     for (let index = 0; index <= keys.length; index++) this.delete(keys[index]);
 
+    this.emit(Events.StorageCleared, keys);
+
     return keys;
   };
 
-  /**
-   * Returns the elements of an array that meet the condition specified in a callback function.
-   * @param {( value: any, key: string, index: number, this: Storage )} callback A function that accepts up to four arguments. The filter method calls the callback function one time for each element in the array.
-   */
   filter(callback) {
     const callbackChecker = new Checker(callback);
     callbackChecker.createError(!callbackChecker.isFunction, "callback", { expected: "Function" }).throw();
@@ -212,31 +157,32 @@ export class Storage extends EventEmitter {
       index++;
     };
 
+    this.emit(Events.DataFiltered, results);
+
     return results;
   };
 
-  /**
-   * 
-   * @param {string} key 
-   */
   type(key) {
     const keyChecker = new Checker(key);
-    keyChecker.createError(!keyChecker.isString, "key", { expected: "String" }).throw();
+    keyChecker.createError(keyChecker.isNotString, "key", { expected: "String" }).throw();
 
     const value = this.fetch(key);
 
     return (typeof value);
   };
 
-  /** 
-   * Returns an iterable of key, value pairs for every entry in the map.
-   */
   entries() {
-    return this.#STORAGE.entries();
+    const entry = this.#STORAGE.entries();
+
+    this.emit(Events.EntriesFetched, entry);
+
+    return entry;
   };
 
   keys() {
     const keysArray = this.toJSON().keys;
+
+    this.emit(Events.KeysFetched, keysArray);
 
     return keysArray;
   };
@@ -244,12 +190,16 @@ export class Storage extends EventEmitter {
   values() {
     const valuesArray = this.toJSON().values;
 
+    this.emit(Events.ValuesFetched, valuesArray);
+
     return valuesArray;
   };
 
   toJSON() {
     const keys = this.#STORAGE.keys();
     const values = this.#STORAGE.values();
+
+    this.emit(Events.ConvertedJSON, [...keys], [...values]);
 
     return { keys: [...keys], values: [...values] };
   };
