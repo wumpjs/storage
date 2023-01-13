@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@wumpjs/providers": "^1.0.1"
+    "typed-emitter": "^2.1.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.18"
