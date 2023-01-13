@@ -9,6 +9,6 @@
     "esModuleInterop": true
   },
   "files": [
-    "./src/index.d.ts"
+    "./src/global.d.ts"
   ]
 }

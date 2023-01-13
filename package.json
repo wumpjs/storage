@@ -4,7 +4,7 @@
   "description": "Storage module for wump.js",
   "main": "src/index.js",
   "type": "module",
-  "types": "./src/index.d.ts",
+  "types": "./src/global.d.ts",
   "scripts": {
     "test": "node src/test/index"
   },

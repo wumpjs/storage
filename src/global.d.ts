@@ -20,8 +20,8 @@ declare module "@wumpjs/storage" {
     public get(key: string): V;
     public exists(key: string): boolean;
     public has(key: string): boolean;
-    public map(callback: Function): void[];
-    public find(callback: Function): boolean | undefined;
+    public map(callback: (value: V, key: string, index: number, Storage: Storage<V>) => any): void[];
+    public find(callback: (value: V, key: string, Storage: Storage<V>) => any): boolean | undefined;
     public reverse(): Storage<V>;
     public clear(): string[];
     public filter(callback: (value: V, key: string, index: number, Storage: Storage<V>) => any): any;

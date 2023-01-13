@@ -124,7 +124,7 @@ export class Storage extends EventEmitter {
 
   /**
    * Calls a defined callback function on each element of an array, and returns an array that contains the results.
-   * @param {( value: any, key: string, index: number, this: Storage )} callback — A function that accepts up to four arguments. The map method calls the callback function one time for each element in the array.
+   * @param {( value: any, key: string, index: number, this: Storage )} callback A function that accepts up to four arguments. The map method calls the callback function one time for each element in the array.
    * @returns {void[]}
    */
   map(callback) {
