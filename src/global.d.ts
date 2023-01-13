@@ -1,9 +1,24 @@
 import { StorageEvents as Events } from "./Events";
-
+import TypedEmitter from "typed-emitter"
 import { EventEmitter } from "node:events";
 
 declare module "@wumpjs/storage" {
-  export class Storage<V> extends EventEmitter {
+  export type StorageEventsType<V extends any = any> = {
+     dataSaved: (key: string, value: V, data: V) => any,
+     dataDeleted: (key: string, data: V) => any,
+     dataFetched: (key: string, data: V) => any,
+     dataChecked: (key: string, has: boolean, data: V) => any
+     dataMapped: (callback: (value: V, key: string, index: number, Storage: Storage<V>) => V) => any,
+     dataSearched: (callback: (value: V, key: string, Storage: Storage<V>) => V) => any,
+     dataFiltered: (callback: (value: V, key: string, index: number, Storage: Storage<V>) => V) => any,
+     dataReversed: (entry: [string, V][]) => any
+     storageCleared: (keys: string[]) => any
+     entriesFetched: (entries: IterableIterator<[string, V]>) => any
+     keysFetched: (keys: string[]) => any,
+     valuesFetched: (values: V[]) => any,
+     convertedJSON: (keys: string[], values: V[]) => any
+  }
+  export class Storage<V extends any = any> extends (EventEmitter as new<V extends any = any>() => TypedEmitter<StorageEventsType<V>>)<V> {
     private STORAGE: Map<string, V>;
 
     private fetchStats(): { usedStorage: string; totalStorage: string };
