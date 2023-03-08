@@ -21,7 +21,7 @@ declare module "@wumpjs/storage" {
   }
 
   export class Storage<V> extends (EventEmitter as new <Val>() => TypedEmitter<StorageEventsType<Val>>)<V> {
-    private STORAGE: Map<string, V>;
+    private storage: Map<string, V>;
 
     private fetchStats(): { usedStorage: string; totalStorage: string };
     private convertSizeUnits(bytes: number): { KILOBYTE: number; MEGABYTE: number; GIGABYTE: number; TERABYTE: number };

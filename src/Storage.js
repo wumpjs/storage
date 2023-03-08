@@ -16,11 +16,14 @@ export class Storage extends EventEmitter {
     sizeChecker.createError(sizeChecker.isNotNumber, "size", { expected: "Number" }).throw();
 
     this.storageSize = Number(size).toFixed();
+
+    /**
+     * @private
+     */
+    this.storage = new Map();
   };
 
   static Events = Events;
-
-  #STORAGE = new Map();
 
   size = 0;
 
@@ -31,7 +34,7 @@ export class Storage extends EventEmitter {
     const limited = new Checker(this.size)
     limited.createError(this.size > this.storageSize, "storage", { errorType: "Data Limit Exceeded", expected: this.size, received: this.storageSize }).throw();
 
-    this.#STORAGE.set(key, value);
+    this.storage.set(key, value);
 
     const data = this.fetch(key);
 
@@ -47,7 +50,7 @@ export class Storage extends EventEmitter {
     keyChecker.createError(keyChecker.isNotString, "key", { expected: "String" }).throw();
 
     const data = this.fetch(key);
-    this.#STORAGE.delete(key);
+    this.storage.delete(key);
 
     this.emit(Events.DataDeleted, key, data);
 
@@ -60,7 +63,7 @@ export class Storage extends EventEmitter {
     const keyChecker = new Checker(key);
     keyChecker.createError(keyChecker.isNotString, "key", { expected: "String" }).throw();
 
-    const data = this.#STORAGE.get(key);
+    const data = this.storage.get(key);
 
     this.emit(Events.DataFetched, key, data);
 
@@ -73,7 +76,7 @@ export class Storage extends EventEmitter {
     const keyChecker = new Checker(key);
     keyChecker.createError(keyChecker.isNotString, "key", { expected: "String" }).throw();
 
-    const has = this.#STORAGE.has(key);
+    const has = this.storage.has(key);
 
     let data = null;
     if (has) data = this.fetch(key);
@@ -87,7 +90,7 @@ export class Storage extends EventEmitter {
 
   map(callback) {
     const callbackChecker = new Checker(callback);
-    callbackChecker.createError(!callbackChecker.isFunction, "callback", { expected: "Function" }).throw();
+    callbackChecker.createError(callbackChecker.isNotFunction, "callback", { expected: "Function" }).throw();
 
     let index = -1;
 
@@ -105,9 +108,9 @@ export class Storage extends EventEmitter {
 
   find(callback) {
     const callbackChecker = new Checker(callback);
-    callbackChecker.createError(!callbackChecker.isFunction, "callback", { expected: "Function" }).throw();
+    callbackChecker.createError(callbackChecker.isNotFunction, "callback", { expected: "Function" }).throw();
 
-    for (const [key, value] of this.#STORAGE) {
+    for (const [key, value] of this.storage) {
       if (callback(value, key, this)) return true;
     };
 
@@ -137,7 +140,14 @@ export class Storage extends EventEmitter {
 
     const keys = this.keys();
 
-    for (let index = 0; index <= keys.length; index++) this.delete(keys[index]);
+    for (let index = 0; index < keys.length; index++) {
+      const key = keys[index];
+      const data = this.get(key);
+
+      this.delete(key);
+
+      this.emit(Events.DataDeleted, key, data);
+    };
 
     this.emit(Events.StorageCleared, keys);
 
@@ -146,13 +156,13 @@ export class Storage extends EventEmitter {
 
   filter(callback) {
     const callbackChecker = new Checker(callback);
-    callbackChecker.createError(!callbackChecker.isFunction, "callback", { expected: "Function" }).throw();
+    callbackChecker.createError(callbackChecker.isNotFunction, "callback", { expected: "Function" }).throw();
 
-    const results = new this.#STORAGE.constructor[Symbol.species]();
+    const results = new this.storage.constructor[Symbol.species]();
 
     let index = 0;
 
-    for (const [key, value] of this.#STORAGE) {
+    for (const [key, value] of this.storage) {
       if (callback(value, key, index, this)) results.set(key, value);
       index++;
     };
@@ -172,7 +182,7 @@ export class Storage extends EventEmitter {
   };
 
   entries() {
-    const entry = this.#STORAGE.entries();
+    const entry = this.storage.entries();
 
     this.emit(Events.EntriesFetched, entry);
 
@@ -196,8 +206,8 @@ export class Storage extends EventEmitter {
   };
 
   toJSON() {
-    const keys = this.#STORAGE.keys();
-    const values = this.#STORAGE.values();
+    const keys = this.storage.keys();
+    const values = this.storage.values();
 
     this.emit(Events.ConvertedJSON, [...keys], [...values]);
 
