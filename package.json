@@ -19,6 +19,6 @@
     "typed-emitter": "^2.1.0"
   },
   "devDependencies": {
-    "@types/node": "^18.11.18"
+    "@types/node": "^20.1.1"
   }
 }
