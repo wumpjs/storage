@@ -1,123 +1,83 @@
-import { StorageEvents as Events } from "./enums/TSEvents";
-
-import TypedEmitter from "typed-emitter";
-import { EventEmitter } from "node:events";
-
 declare module "@wumpjs/storage" {
-  export type StorageEventsType<Val> = {
-    dataSaved: (key: string, value: Val, data: Val) => any,
-    dataDeleted: (key: string, data: Val) => any,
-    dataFetched: (key: string, data: Val) => any,
-    dataChecked: (key: string, has: boolean, data: Val) => any
-    dataMapped: (callback: (value: Val, key: string, index: number, Storage: Storage<Val>) => Val) => any,
-    dataSearched: (callback: (value: Val, key: string, Storage: Storage<Val>) => Val) => any,
-    dataFiltered: (callback: (value: Val, key: string, index: number, Storage: Storage<Val>) => Val) => any,
-    dataReversed: (entry: [string, Val][]) => any
-    storageCleared: (keys: string[]) => any
-    entriesFetched: (entries: IterableIterator<[string, Val]>) => any
-    keysFetched: (keys: string[]) => any,
-    valuesFetched: (values: Val[]) => any,
-    convertedJSON: (keys: string[], values: Val[]) => any
-  }
-
-  export class Storage<V> extends (EventEmitter as new <Val>() => TypedEmitter<StorageEventsType<Val>>)<V> {
-    private storage: Map<string, V>;
-
-    private fetchStats(): { usedStorage: string; totalStorage: string };
-    private convertSizeUnits(bytes: number): { KILOBYTE: number; MEGABYTE: number; GIGABYTE: number; TERABYTE: number };
-
-    public constructor(size?: number);
+  export class Storage<K = string, V> extends Map<K, V>{
+    /**
+     * Create new temp-based storage.
+     */
+    public constructor(options: StorageOptions);
 
     /**
-     * Shows Total Size of Storage.
+     * Storage options.
      */
-    public readonly size: number;
-
-    static readonly Events: Events;
+    public readonly options: StorageOptions;
 
     /**
-     * Adds a new element with a specified key and value to the Map. If an element with the same key already exists, the element will be updated.
+     * Get last key of Storage.
      */
-    public set(key: string, value: V): V;
-
+    public lastKey: K;
     /**
-     * Deletes the specified key.
+     * Get first key of Storage.
      */
-    public delete(key: string): V;
-
+    public firstKey: K;
     /**
-     * Returns a specified element from the Map object. If the value that is associated to the provided key is an object, then you will get a reference to that object and any change made to that object will effectively modify it inside the Map.
+     * Get last value of Storage.
      */
-    public fetch(key: string): V;
-
+    public lastValue: V;
     /**
-     * Returns a specified element from the Map object. If the value that is associated to the provided key is an object, then you will get a reference to that object and any change made to that object will effectively modify it inside the Map.
+     * Get first value of Storage.
      */
-    public get(key: string): V;
-
+    public firstValue: V;
     /**
-     * Boolean indicating whether an element with the specified key exists or not.
+     * JSON Results of Storage.
      */
-    public exists(key: string): boolean;
-
+    public json: { keys: K[], values: V[] };
     /**
-     * Boolean indicating whether an element with the specified key exists or not.
+     * Reverses Storage.
      */
-    public has(key: string): boolean;
-
+    public reverse: this;
     /**
-     * Calls a defined callback function on each element of an array, and returns an array that contains the results.
+     * Clone storage.
      */
-    public map(callback: (value: V, key: string, index: number, Storage: Storage<V>) => V): V[];
-
-    /**
-     * Returns the value of the first element in the array where predicate is true, and undefined otherwise.
-     */
-    public find(callback: (value: V, key: string, Storage: Storage<V>) => unknown): V | undefined;
-
-    /**
-     * Reverses the elements in an array in place. This method mutates the array and returns a reference to the same array.
-     */
-    public reverse(): Storage<V>;
-
-    /**
-     * Clears storage.
-     */
-    public clear(): string[];
-
-    /**
-     * Returns the elements of an array that meet the condition specified in a callback function.
-     */
-    public filter(callback: (value: V, key: string, index: number, Storage: Storage<V>) => unknown): Storage<V>;
-
-    /**
-     * Retrieves the type of data of the specified key.
-     */
-    public type(key: string): string;
+    public clone: Storage<K, V>;
     
     /**
-     * Returns an iterable of key, value pairs for every entry in the map.
+     * The crop method returns a new structure containing items where the keys and values are present in both original structures.
      */
-    public entries(): IterableIterator<[string, V]>;
+    public crop(storage: this): this;
+    static combine(entries: object, combine: (storageValue: V, value: V, key: K) => boolean): this;
+    public concat(...storages: this[]): this;
+    public equals(storage: this): boolean;
+    public each(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
+    public ensure(key: K, callback: (value: V, key: K, Storage: this) => V): V;
+    public every(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): boolean;
+    public findValue(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): V;
+    public findAny(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): { key: K, value: V }[];
+    public findValue(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): V[keyof V];
+    public findKey(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): K;
+    public flatMap(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
+    public filter(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
+    public filterAndSave(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
+    protected forEach(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
+    public getMultiple(...keys: K[]): V[];
+    public hasAny(...datas: V[]): boolean;
+    public hasEvery(...datas: V[]): boolean;
+    public keyAt(index: number): K;
+    public map(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): V[];
+    public map(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): V[keyof V][];
+    public randomValue(count: number): V;
+    public randomKey(count: number): K;
+    public random(options: { min?: number, max?: number }): number
+    public replaceKey(value: V, newKey: K): this
+    public replaceValue(key: K, newValue: V): this
+    public replaceAllKeys(...org: { value: V, replaceWith: K }): this
+    public replaceAllValues(...org: { key: K, replaceWith: V}): this
+    public sort(callback: (f: K, s: V) => boolean): this;
+    public set(name: K, value: V): this;
+    public subtract(storage: this): this;
+    public some(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): boolean;
+    public valueAt(index: number): V;
+  }
 
-    /**
-     * Lists keys in storage.
-     */
-    public keys(): string[];
-
-    /**
-     * Lists values in storage.
-     */
-    public values(): V[];
-
-    /**
-     * Converts storage to JSON.
-     */
-    public toJSON(): { keys: string[]; values: V[] };
-
-    /**
-     * Storage information.
-     */
-    public information(): { usedStorage: string; totalStorage: string };
+  export interface StorageOptions {
+    size?: number;
   }
 }
