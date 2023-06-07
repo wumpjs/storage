@@ -22,3 +22,4 @@ npm i -g pnpm@latest && pnpm i @wumpjs/storage
 - [@MegalithOffical](https://www.github.com/MegalithOffical)
 - [@Nicat-dcw](https://www.github.com/Nicat-dcw)
 - [@erqewee](https://www.github.com/erqewee)
+- [@davutozgursukuti4531](https://www.github.com/davutozgursukuti4531)

@@ -1,5 +1,5 @@
 declare module "@wumpjs/storage" {
-  export class Storage<K = string, V> extends Map<K, V>{
+  export default class Storage<V, K = string> extends Map<K, V>{
     /**
      * Create new temp-based storage.
      */
@@ -63,13 +63,15 @@ declare module "@wumpjs/storage" {
     public keyAt(index: number): K;
     public map(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): V[];
     public map(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): V[keyof V][];
+    public map(callback: (value: V, key: K, Storage: this) => any, thisArg?: this): V[keyof V][];
+    public map(callback: (value: V, key: K, Storage: this) => any, thisArg?: this): V[];
     public randomValue(count: number): V;
     public randomKey(count: number): K;
     public random(options: { min?: number, max?: number }): number
     public replaceKey(value: V, newKey: K): this
     public replaceValue(key: K, newValue: V): this
-    public replaceAllKeys(...org: { value: V, replaceWith: K }): this
-    public replaceAllValues(...org: { key: K, replaceWith: V}): this
+    public replaceAllKeys(...org: { value: V, replaceWith: K }[]): this
+    public replaceAllValues(...org: { key: K, replaceWith: V}[]): this
     public sort(callback: (f: K, s: V) => boolean): this;
     public set(name: K, value: V): this;
     public subtract(storage: this): this;
