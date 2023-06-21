@@ -1,5 +1,5 @@
 declare module "@wumpjs/storage" {
-  export default class Storage<V, K = string> extends Map<K, V>{
+  export default class Storage<K = string, V = unknown> extends Map<K, V>{
     /**
      * Create new temp-based storage.
      */
@@ -56,7 +56,7 @@ declare module "@wumpjs/storage" {
     public flatMap(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
     public filter(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
     public filterAndSave(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
-    protected forEach(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
+    private forEach(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
     public getMultiple(...keys: K[]): V[];
     public hasAny(...datas: V[]): boolean;
     public hasEvery(...datas: V[]): boolean;
