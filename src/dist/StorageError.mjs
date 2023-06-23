@@ -1,4 +1,4 @@
-import colorette from "colorette";
+import { yellowBright, redBright } from "colorette";
 
 /**
  * @abstract
@@ -11,11 +11,11 @@ class DefaultError extends Error {
    * @constructor
    */
   constructor(message, options) {
-    super(colorette.yellowBright(message));
+    super(yellowBright(message));
 
     Object.defineProperties(this, {
       name: {
-        value: colorette.redBright(`WumpStorageError[${options?.name ?? 'UnknownError'}]`),
+        value: redBright(`WumpStorageError[${options?.name ?? 'UnknownError'}]`),
         writable: false,
         configurable: false
       },
