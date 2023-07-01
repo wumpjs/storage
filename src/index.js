@@ -1,6 +1,5 @@
 import Storage from "./dist/Storage.js";
-import __StorageError from "./dist/StorageError.js";
-const StorageError = __StorageError.default;
+import StorageError from "./dist/StorageError.js";
 
 export { StorageError };
 export default Storage;
