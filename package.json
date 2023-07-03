@@ -1,6 +1,6 @@
 {
   "name": "@wumpjs/storage",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "private": false,
   "description": "",
   "main": "./src/index.js",
@@ -28,6 +28,6 @@
     "start": "node src/index"
   },
   "dependencies": {
-    "string-colorizer": "^1.0.1"
+    "string-colorizer": "^1.0.2"
   }
 }
