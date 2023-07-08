@@ -46,7 +46,6 @@ declare module "@wumpjs/storage" {
     static combine(entries: object, combine: (storageValue: V, value: V, key: K) => boolean): this;
     public concat(...storages: this[]): this;
     public equals(storage: this): boolean;
-    public each(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
     public ensure(key: K, callback: (value: V, key: K, Storage: this) => V): V;
     public every(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): boolean;
     public findValue(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): V;
@@ -56,7 +55,7 @@ declare module "@wumpjs/storage" {
     public flatMap(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
     public filter(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
     public filterAndSave(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
-    private forEach(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
+    public forEach(callback: (value: V, key: K, Storage: this) => boolean, thisArg?: this): this;
     public getMultiple(...keys: K[]): V[];
     public hasAny(...datas: V[]): boolean;
     public hasEvery(...datas: V[]): boolean;
@@ -71,7 +70,7 @@ declare module "@wumpjs/storage" {
     public replaceKey(value: V, newKey: K): this
     public replaceValue(key: K, newValue: V): this
     public replaceAllKeys(...org: { value: V, replaceWith: K }[]): this
-    public replaceAllValues(...org: { key: K, replaceWith: V}[]): this
+    public replaceAllValues(...org: { key: K, replaceWith: V }[]): this
     public sort(callback: (f: K, s: V) => boolean): this;
     public set(name: K, value: V): this;
     public subtract(storage: this): this;

@@ -1,5 +1,3 @@
-import { deprecate } from "node:util";
-
 import StorageError from "./StorageError.js";
 
 export default class Storage extends Map {
@@ -215,21 +213,8 @@ export default class Storage extends Map {
     return this;
   };
 
-  /**
-   * @deprecated Please use 'each' instead.
-   * @private
-   */
-  forEach(callback) {
-    if (typeof callback !== "function") callback = () => { };
 
-    (deprecate(() => { }, `'forEach' is deprecated. Please use 'each' instead.`, "MovedFunction"))();
-
-    super.forEach(callback);
-
-    return this;
-  };
-
-  each(callback, thisArg) {
+  forEach(callback, thisArg) {
     if (typeof callback !== "function") (new StorageError(`'${callback}' is not Function.`, { name: "TypeError" })).throw();
 
     if (thisArg !== undefined) callback = callback.bind(thisArg);

@@ -1,4 +1,6 @@
 import Colorizer from "string-colorizer";
+const errorColorizer = new Colorizer()
+    const { styles } = errorColorizer
 
 /**
  * @abstract
@@ -12,8 +14,6 @@ class DefaultError extends Error {
    */
   constructor(message, options) {
     console.log()
-    const errorColorizer = new Colorizer()
-    const { styles } = errorColorizer
     super(styles.bright(errorColorizer.foregroundColors.yellow(message)));
     Object.defineProperty(this, "name", {
       value: errorColorizer.styles.bright(errorColorizer.foregroundColors.red(`WumpStorageError[${options?.name ?? 'UnknownError'}]`)),
