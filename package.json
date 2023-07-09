@@ -1,6 +1,6 @@
 {
   "name": "@wumpjs/storage",
-  "version": "2.3.5",
+  "version": "2.3.6",
   "private": false,
   "description": "",
   "main": "./src/index.js",
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@babel/cli": "^7.21.5",
     "@babel/core": "^7.22.1",
+    "@babel/plugin-syntax-import-attributes": "^7.22.5",
     "@babel/plugin-transform-modules-commonjs": "^7.21.5",
     "@types/node": "^20.2.5"
   },
